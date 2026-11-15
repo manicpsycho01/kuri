@@ -215,7 +215,7 @@ function Results({ s, snap, onAgain }: { s: Sandbox; snap: Snap; onAgain: (m: Mo
     const flows = s.cashflows(x.seat);
     const net = flows.reduce((a, b) => a + b, 0n);
     const won = snap.rounds.find((r) => r.winner?.toLowerCase() === x.address.toLowerCase());
-    return { x, net, rate: s.rate(x.seat), won, m: snap.members[x.seat - 1]! };
+    return { x, net, won, m: snap.members[x.seat - 1]! };
   });
   return (
     <div className="rounded-3xl border border-aurora/40 bg-night-2 p-5 sm:p-7" data-testid="results">
@@ -224,20 +224,24 @@ function Results({ s, snap, onAgain }: { s: Sandbox; snap: Snap; onAgain: (m: Mo
       <p className="mt-2 text-ice-2">A kuri is really two things at once. Whoever wins early gets a lump sum before they&apos;ve paid it in — a loan, and the discount is the interest. Whoever waits is lending to them, and the dividends are their return.</p>
       <div className="mt-5 overflow-x-auto">
         <table className="w-full min-w-[460px] text-[15px]">
-          <thead><tr className="label text-left text-muted"><th className="py-2 font-normal">Member</th><th className="py-2 font-normal">Won</th><th className="py-2 text-right font-normal">Net</th><th className="py-2 text-right font-normal">As a yearly rate</th></tr></thead>
+          <thead><tr className="label text-left text-muted"><th className="py-2 font-normal">Member</th><th className="py-2 font-normal">Got the pot</th><th className="py-2 text-right font-normal">Net</th><th className="py-2 pl-4 text-left font-normal">What that means</th></tr></thead>
           <tbody>
-            {rows.map(({ x, net, rate, won, m }) => (
+            {rows.map(({ x, net, won, m }) => (
               <tr key={x.seat} className={`border-t border-line-2 ${x.you ? "text-ice" : "text-ice-2"}`}>
                 <td className="py-2 font-semibold">{x.name}{m.inDefault ? <span className="ml-2 text-ember">defaulted</span> : null}</td>
-                <td className="num py-2">{won ? `round ${won.round + 1}` : "—"}</td>
+                <td className="num py-2">{won ? `month ${won.round + 1}` : "—"}</td>
                 <td className={`num py-2 text-right ${net >= 0n ? "text-aurora" : "text-ice-2"}`}>{inr(net, { sign: true })}</td>
-                <td className="py-2 text-right text-[14.5px]">{rate === null ? "—" : net < 0n ? `paid ${(rate * 100).toFixed(1)}% for early money` : `earned ${(rate * 100).toFixed(1)}%`}</td>
+                <td className="py-2 pl-4 text-[14.5px]" data-testid="meaning">
+                  {!won ? "never received the pot" : net < 0n
+                    ? `paid ${inr(-net)} to get ${inr(won.prize - won.escrowed)} in month ${won.round + 1}`
+                    : `earned ${inr(net)} by waiting until month ${won.round + 1}`}
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
-      <p className="mt-4 text-[15px] text-muted">Rates assume one round per month. Commission paid to the foreman: {inr(snap.rounds.reduce((a, r) => a + r.commission, 0n))}.</p>
+      <p className="mt-4 text-[15px] text-muted">Net is everything received minus everything paid in, including security returned at the end. One round = one month. Commission paid to the foreman: {inr(snap.rounds.reduce((a, r) => a + r.commission, 0n))}.</p>
       <div className="mt-5 flex flex-wrap gap-3">
         <button type="button" className="btn btn-aurora" onClick={() => onAgain(s.opts.mode === "trust" ? "escrow" : "trust")}>Play again in {s.opts.mode === "trust" ? "escrow" : "trust"} mode</button>
         <Link href="/how" className="btn">How the contract works</Link>

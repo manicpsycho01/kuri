@@ -45,8 +45,10 @@ test("play: a whole circle through the UI — every round settles, books balance
   const results = page.getByTestId("results");
   await expect(results).toBeVisible();
   await expect(results.getByRole("row")).toHaveCount(6);
-  await expect(results.getByText(/paid [\d.]+% for early money/).first()).toBeVisible();
-  await expect(results.getByText(/earned [\d.]+%/).first()).toBeVisible();
+  // early winners pay for getting the pot early; later winners are paid for waiting — in plain rupees
+  await expect(results.getByText(/^paid ₹[\d,]+ to get ₹[\d,]+ in month 1$/)).toBeVisible();
+  await expect(results.getByText(/^earned ₹[\d,]+ by waiting until month \d$/).first()).toBeVisible();
+  expect(await results.getByText(/%/).count()).toBe(0);
   expect(errs).toEqual([]);
 });
 
