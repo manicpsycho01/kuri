@@ -6,3 +6,4 @@ types
 .env.*
 coverage
 ignition/deployments/chain-31337
+.env.demo

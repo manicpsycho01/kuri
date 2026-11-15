@@ -1,0 +1,75 @@
+@import "tailwindcss";
+
+/* Black, ice white and aurora green. A northern-lights night: deep black ground, ice-white type with hairline
+   rules, and aurora green kept for what matters — money moving, your turn, the winner. The aurora itself only
+   appears as a slow curtain of light, never as glossy UI. Anek Latin (wide and heavy for numbers and headings,
+   regular for reading) and DM Mono for amounts and hashes. */
+@theme {
+  --color-night: #04070a;
+  --color-night-2: #091015;
+  --color-night-3: #0f1a20;
+  --color-ice: #e9f5f7;
+  --color-ice-2: #b8ccd2;
+  --color-muted: #7d9198;
+  --color-line: rgb(233 245 247 / 0.14);
+  --color-line-2: rgb(233 245 247 / 0.07);
+  --color-aurora: #4ff5a6;
+  --color-aurora-2: #2bd4c2;
+  --color-aurora-soft: rgb(79 245 166 / 0.12);
+  --color-ember: #ff8a7a;
+  --color-ember-soft: rgb(255 138 122 / 0.12);
+  --color-gold: #f2d27a;
+
+  --font-display: var(--font-anek), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-anek), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-dmmono), ui-monospace, monospace;
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@custom-variant short (@media (min-width: 640px) and (max-height: 760px));
+
+:root { color-scheme: dark; }
+html { background: var(--color-night); -webkit-text-size-adjust: 100%; }
+body {
+  background: var(--color-night);
+  color: var(--color-ice);
+  font-family: var(--font-sans);
+  font-size: 17px;
+  line-height: 1.55;
+  font-variation-settings: "wdth" 100;
+  -webkit-font-smoothing: antialiased;
+}
+::selection { background: var(--color-aurora); color: var(--color-night); }
+:focus-visible { outline: 2px solid var(--color-aurora); outline-offset: 3px; border-radius: 3px; }
+
+/* Wide, heavy display type — Anek's width axis is the signature. */
+@utility display { font-family: var(--font-display); font-weight: 700; font-variation-settings: "wdth" 125; letter-spacing: -0.02em; line-height: 0.95; }
+@utility label { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; line-height: 1.3; }
+@utility num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+@utility hash { font-family: var(--font-mono); font-size: 12.5px; overflow-wrap: anywhere; }
+
+@utility btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+  min-height: 46px; padding: 0 1.2rem; border-radius: 999px; border: 1px solid var(--color-line);
+  font-weight: 600; font-size: 15.5px; color: var(--color-ice); background: transparent;
+  transition: border-color .2s, background-color .2s, color .2s, transform .2s;
+  &:hover { border-color: var(--color-ice); }
+  &:active { transform: translateY(1px); }
+  &:disabled { opacity: .4; pointer-events: none; }
+}
+@utility btn-aurora {
+  background: var(--color-aurora); border-color: var(--color-aurora); color: var(--color-night);
+  &:hover { background: #7dffc0; border-color: #7dffc0; color: var(--color-night); }
+}
+
+.field { min-height: 46px; width: 100%; padding: 0 0.9rem; border-radius: 10px; border: 1px solid var(--color-line); background: var(--color-night); color: var(--color-ice); font-family: var(--font-mono); font-size: 15px; }
+.field:focus { outline: none; border-color: var(--color-aurora); }
+input[type="range"] { accent-color: var(--color-aurora); min-height: 32px; width: 100%; }
+
+@keyframes curtain { 0% { transform: translateX(-4%) skewX(-8deg) scaleY(1); opacity: .55; } 50% { transform: translateX(3%) skewX(6deg) scaleY(1.15); opacity: .9; } 100% { transform: translateX(-4%) skewX(-8deg) scaleY(1); opacity: .55; } }
+@keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes pulse-ring { from { r: 20; opacity: .8; } to { r: 46; opacity: 0; } }
+[data-rise] { animation: rise .8s var(--ease-out-expo) both; animation-delay: calc(var(--d, 0) * 90ms); }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 1ms !important; animation-delay: 0ms !important; animation-iteration-count: 1 !important; transition-duration: 1ms !important; }
+}

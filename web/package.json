@@ -1,0 +1,39 @@
+{
+  "name": "kuri-web",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@10.18.3",
+  "scripts": {
+    "dev": "next dev -p 3600",
+    "build": "next build",
+    "start": "next start -p 3600",
+    "test": "vitest run",
+    "e2e": "playwright test"
+  },
+  "dependencies": {
+    "@ethereumjs/block": "^10.1.3",
+    "@ethereumjs/common": "^10.1.3",
+    "@ethereumjs/evm": "^10.1.3",
+    "@ethereumjs/tx": "^10.1.3",
+    "@ethereumjs/util": "^10.1.3",
+    "@ethereumjs/vm": "10.1.3",
+    "@gsap/react": "2.1.2",
+    "gsap": "3.15.0",
+    "lenis": "1.3.27",
+    "next": "16.4.2",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "viem": "^2.57.20"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.64.0",
+    "@tailwindcss/postcss": "^4.3.5",
+    "@types/node": "^22.20.5",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "postcss": "^8.5.33",
+    "tailwindcss": "^4.3.5",
+    "typescript": "5.9.3",
+    "vitest": "^5.1.0"
+  }
+}
